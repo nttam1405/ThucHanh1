@@ -1,0 +1,2015 @@
+<!doctype html>
+<html lang="vi" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wanderlust World - Khám Phá Kỳ Quan Thế Giới</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config for Custom Colors & Fonts -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ocean: {
+                DEFAULT: "#0F4C81",
+                dark: "#0A355C",
+                light: "#EBF3FA",
+              },
+              coral: {
+                DEFAULT: "#FF6B6B",
+                hover: "#FF5252",
+                light: "#FFF0F0",
+              },
+              ivory: "#F8FAFC",
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              serif: ['"Playfair Display"', "serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Tùy chỉnh thanh cuộn */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f8fafc;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0f4c81;
+      }
+
+      /* Hiệu ứng Glassmorphism */
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .glass-dark {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .glass-search {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      /* Animation mượt cho Cards */
+      .destination-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .destination-card:hover {
+        transform: translateY(-8px);
+        box-shadow:
+          0 20px 25px -5px rgba(15, 76, 129, 0.12),
+          0 8px 10px -6px rgba(15, 76, 129, 0.08);
+      }
+
+      /* Hiệu ứng tim đập khi bấm yêu thích */
+      @keyframes heartPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .heart-active {
+        animation: heartPulse 0.35s ease-in-out;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-ivory text-slate-800 font-sans antialiased selection:bg-coral selection:text-white"
+  >
+    <!-- ==================== 1. STICKY GLASSMORPHISM NAVBAR ==================== -->
+    <header
+      id="navbar"
+      class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 glass-nav border-b border-slate-200/60 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <!-- Logo -->
+          <a href="#" class="flex items-center gap-3 group">
+            <div
+              class="w-11 h-11 rounded-2xl bg-ocean flex items-center justify-center text-white shadow-md shadow-ocean/20 group-hover:bg-coral transition-colors duration-300"
+            >
+              <i data-lucide="compass" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span
+                class="text-xl font-extrabold tracking-tight text-ocean block leading-none"
+                >Wanderlust</span
+              >
+              <span
+                class="text-xs font-semibold tracking-widest uppercase text-coral"
+                >World</span
+              >
+            </div>
+          </a>
+
+          <!-- Desktop Navigation Links -->
+          <nav class="hidden md:flex items-center space-x-8">
+            <a
+              href="#home"
+              class="text-sm font-semibold text-ocean hover:text-coral transition-colors"
+              >Trang chủ</a
+            >
+            <a
+              href="#destinations"
+              class="text-sm font-semibold text-slate-600 hover:text-ocean transition-colors"
+              >Điểm đến</a
+            >
+            <a
+              href="#experiences"
+              class="text-sm font-semibold text-slate-600 hover:text-ocean transition-colors"
+              >Trải nghiệm</a
+            >
+            <a
+              href="#guides"
+              class="text-sm font-semibold text-slate-600 hover:text-ocean transition-colors"
+              >Cẩm nang</a
+            >
+            <a
+              href="#footer"
+              class="text-sm font-semibold text-slate-600 hover:text-ocean transition-colors"
+              >Liên hệ</a
+            >
+          </nav>
+
+          <!-- Action Buttons -->
+          <div class="hidden md:flex items-center gap-4">
+            <button
+              onclick="toggleSavedFilter()"
+              id="savedBtn"
+              class="relative p-2.5 text-slate-600 hover:text-coral hover:bg-slate-100 rounded-xl transition-all"
+              title="Địa điểm đã lưu"
+            >
+              <i data-lucide="heart" class="w-5 h-5"></i>
+              <span
+                id="savedCountBadge"
+                class="absolute -top-1 -right-1 w-5 h-5 bg-coral text-white text-[11px] font-bold rounded-full flex items-center justify-center scale-0 transition-transform duration-200"
+                >0</span
+              >
+            </button>
+            <button
+              onclick="openPlannerModal()"
+              class="bg-ocean hover:bg-ocean-dark text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-md shadow-ocean/20 hover:shadow-lg hover:shadow-ocean/30 transition-all flex items-center gap-2"
+            >
+              <i data-lucide="sparkles" class="w-4 h-4 text-coral"></i>
+              <span>Lên lịch trình</span>
+            </button>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <div class="flex items-center gap-2 md:hidden">
+            <button
+              onclick="toggleSavedFilter()"
+              class="relative p-2 text-slate-700"
+            >
+              <i data-lucide="heart" class="w-6 h-6"></i>
+              <span
+                id="savedCountBadgeMobile"
+                class="absolute top-0 right-0 w-4 h-4 bg-coral text-white text-[10px] font-bold rounded-full flex items-center justify-center scale-0 transition-transform duration-200"
+                >0</span
+              >
+            </button>
+            <button
+              onclick="toggleMobileMenu()"
+              class="p-2 text-slate-700 hover:text-ocean focus:outline-none"
+            >
+              <i data-lucide="menu" id="mobileMenuIcon" class="w-7 h-7"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 px-4 pt-3 pb-6 space-y-3"
+      >
+        <a
+          href="#home"
+          onclick="toggleMobileMenu()"
+          class="block px-3 py-2 rounded-lg text-base font-semibold text-ocean bg-ocean-light"
+          >Trang chủ</a
+        >
+        <a
+          href="#destinations"
+          onclick="toggleMobileMenu()"
+          class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100"
+          >Điểm đến</a
+        >
+        <a
+          href="#experiences"
+          onclick="toggleMobileMenu()"
+          class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100"
+          >Trải nghiệm</a
+        >
+        <a
+          href="#guides"
+          onclick="toggleMobileMenu()"
+          class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100"
+          >Cẩm nang</a
+        >
+        <a
+          href="#footer"
+          onclick="toggleMobileMenu()"
+          class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100"
+          >Liên hệ</a
+        >
+        <div class="pt-2">
+          <button
+            onclick="
+              openPlannerModal();
+              toggleMobileMenu();
+            "
+            class="w-full bg-ocean text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4 text-coral"></i>
+            <span>Lên lịch trình ngay</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== 2. HERO SECTION ==================== -->
+    <section
+      id="home"
+      class="relative min-h-[92vh] pt-28 pb-20 flex items-center justify-center overflow-hidden"
+    >
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=2000&q=85"
+          alt="Santorini Greece"
+          onerror="
+            this.src =
+              'https://placehold.co/1920x1080/0F4C81/FFFFFF?text=Wanderlust+World'
+          "
+          class="w-full h-full object-cover object-center scale-105 animate-[pulse_20s_ease-in-out_infinite]"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-slate-900/65 via-slate-900/45 to-ivory"
+        ></div>
+      </div>
+
+      <div
+        class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center mt-8"
+      >
+        <!-- Badge -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark text-white text-xs sm:text-sm font-medium mb-6 border border-white/20 shadow-lg"
+        >
+          <span class="w-2 h-2 rounded-full bg-coral animate-ping"></span>
+          <span
+            >Cẩm nang du lịch cao cấp • Khám phá 8+ Kỳ quan nổi bật nhất</span
+          >
+        </div>
+
+        <!-- Main Heading -->
+        <h1
+          class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.15] max-w-4xl mx-auto drop-shadow-sm"
+        >
+          Đánh thức tâm hồn xê dịch cùng
+          <span class="font-serif italic font-normal text-coral">Thế Giới</span>
+          kỳ vĩ
+        </h1>
+
+        <!-- Subtitle -->
+        <p
+          class="mt-6 text-base sm:text-xl text-slate-100 max-w-2xl mx-auto font-normal leading-relaxed drop-shadow"
+        >
+          Từ những mái vòm xanh biếc tại Santorini, thành cổ Machu Picchu huyền
+          bí đến Vịnh Hạ Long kỳ quan thiên nhiên — bắt đầu hành trình trong mơ
+          của bạn ngay hôm nay.
+        </p>
+
+        <!-- Floating Glassmorphism Search Bar -->
+        <div
+          class="mt-10 sm:mt-14 max-w-5xl mx-auto glass-search p-4 sm:p-6 rounded-3xl shadow-2xl border border-white/80 text-left"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <!-- Search Input -->
+            <div
+              class="md:col-span-4 relative border-b md:border-b-0 md:border-r border-slate-200 pb-3 md:pb-0 md:pr-4"
+            >
+              <label
+                class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1"
+                >Địa điểm</label
+              >
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="search" class="w-5 h-5 text-ocean shrink-0"></i>
+                <input
+                  type="text"
+                  id="searchInput"
+                  oninput="handleSearchAndFilter()"
+                  placeholder="Tìm Paris, Kyoto, Hạ Long..."
+                  class="w-full bg-transparent text-slate-800 font-semibold placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-sm sm:text-base"
+                />
+              </div>
+            </div>
+
+            <!-- Continent Select -->
+            <div
+              class="md:col-span-3 relative border-b md:border-b-0 md:border-r border-slate-200 pb-3 md:pb-0 md:px-2"
+            >
+              <label
+                class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1"
+                >Khu vực / Châu lục</label
+              >
+              <div class="flex items-center gap-2.5">
+                <i
+                  data-lucide="globe-2"
+                  class="w-5 h-5 text-ocean shrink-0"
+                ></i>
+                <select
+                  id="continentSelect"
+                  onchange="syncDropdownToTab(this.value)"
+                  class="w-full bg-transparent text-slate-800 font-semibold focus:outline-none text-sm sm:text-base cursor-pointer"
+                >
+                  <option value="all">Tất cả châu lục</option>
+                  <option value="Châu Á">Châu Á</option>
+                  <option value="Châu Âu">Châu Âu</option>
+                  <option value="Châu Mỹ">Châu Mỹ</option>
+                  <option value="Kỳ quan">Kỳ quan thế giới</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Travel Style Select -->
+            <div class="md:col-span-3 relative pb-2 md:pb-0 md:px-2">
+              <label
+                class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1"
+                >Phong cách du lịch</label
+              >
+              <div class="flex items-center gap-2.5">
+                <i
+                  data-lucide="palmtree"
+                  class="w-5 h-5 text-ocean shrink-0"
+                ></i>
+                <select
+                  id="styleSelect"
+                  onchange="handleSearchAndFilter()"
+                  class="w-full bg-transparent text-slate-800 font-semibold focus:outline-none text-sm sm:text-base cursor-pointer"
+                >
+                  <option value="all">Mọi phong cách</option>
+                  <option value="Văn hóa & Lịch sử">Văn hóa & Lịch sử</option>
+                  <option value="Nghỉ dưỡng & Lãng mạn">
+                    Nghỉ dưỡng & Lãng mạn
+                  </option>
+                  <option value="Thiên nhiên & Khám phá">
+                    Thiên nhiên & Khám phá
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="md:col-span-2">
+              <button
+                onclick="scrollToDestinations()"
+                class="w-full bg-coral hover:bg-coral-hover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-coral/30 hover:shadow-coral/50 transition-all flex items-center justify-center gap-2"
+              >
+                <span>Khám phá</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div
+          class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-center"
+        >
+          <div
+            class="p-3 rounded-2xl bg-white/80 backdrop-blur border border-slate-200/60 shadow-sm"
+          >
+            <p class="text-2xl font-extrabold text-ocean">50+</p>
+            <p class="text-xs font-medium text-slate-500">Quốc gia nổi tiếng</p>
+          </div>
+          <div
+            class="p-3 rounded-2xl bg-white/80 backdrop-blur border border-slate-200/60 shadow-sm"
+          >
+            <p class="text-2xl font-extrabold text-ocean">4.9/5</p>
+            <p class="text-xs font-medium text-slate-500">
+              Đánh giá từ du khách
+            </p>
+          </div>
+          <div
+            class="p-3 rounded-2xl bg-white/80 backdrop-blur border border-slate-200/60 shadow-sm"
+          >
+            <p class="text-2xl font-extrabold text-ocean">100%</p>
+            <p class="text-xs font-medium text-slate-500">Cẩm nang bản địa</p>
+          </div>
+          <div
+            class="p-3 rounded-2xl bg-white/80 backdrop-blur border border-slate-200/60 shadow-sm"
+          >
+            <p class="text-2xl font-extrabold text-ocean">24/7</p>
+            <p class="text-xs font-medium text-slate-500">
+              Hỗ trợ lịch trình AI
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3 & 4. INTERACTIVE FILTER & FEATURED DESTINATIONS ==================== -->
+    <section
+      id="destinations"
+      class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <!-- Section Header -->
+      <div
+        class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6"
+      >
+        <div>
+          <div
+            class="inline-flex items-center gap-2 text-coral font-bold text-xs uppercase tracking-widest mb-2"
+          >
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+            <span>Điểm Đến Tuyệt Vời Nhất</span>
+          </div>
+          <h2
+            class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+          >
+            Các Địa Điểm Nổi Tiếng
+            <span class="text-ocean font-serif italic">Thế Giới</span>
+          </h2>
+        </div>
+        <p class="text-slate-600 max-w-md text-sm sm:text-base">
+          Chọn lọc những biểu tượng du lịch vĩ đại nhất hành tinh kèm cẩm nang
+          chi tiết về thời điểm, chi phí và lịch trình trải nghiệm.
+        </p>
+      </div>
+
+      <!-- 3. Interactive Continent Filter Tabs -->
+      <div
+        class="flex items-center justify-between flex-wrap gap-4 mb-10 pb-4 border-b border-slate-200"
+      >
+        <div
+          class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto no-scrollbar"
+          id="filterTabs"
+        >
+          <button
+            onclick="setTabFilter('all')"
+            data-tab="all"
+            class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-ocean text-white shadow-md shadow-ocean/20 shrink-0"
+          >
+            Tất cả (8)
+          </button>
+          <button
+            onclick="setTabFilter('Châu Á')"
+            data-tab="Châu Á"
+            class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shrink-0"
+          >
+            Châu Á
+          </button>
+          <button
+            onclick="setTabFilter('Châu Âu')"
+            data-tab="Châu Âu"
+            class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shrink-0"
+          >
+            Châu Âu
+          </button>
+          <button
+            onclick="setTabFilter('Châu Mỹ')"
+            data-tab="Châu Mỹ"
+            class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shrink-0"
+          >
+            Châu Mỹ
+          </button>
+          <button
+            onclick="setTabFilter('Kỳ quan')"
+            data-tab="Kỳ quan"
+            class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shrink-0 flex items-center gap-1.5"
+          >
+            <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
+            <span>Kỳ quan thế giới</span>
+          </button>
+        </div>
+
+        <!-- Reset / Status Indicator -->
+        <div
+          id="filterStatus"
+          class="hidden items-center gap-2 text-sm text-slate-500"
+        >
+          <span id="resultCountText">Hiển thị 8 địa điểm</span>
+          <button
+            onclick="resetAllFilters()"
+            class="text-coral hover:underline font-semibold ml-2 flex items-center gap-1"
+          >
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Đặt lại
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Destinations Grid -->
+      <div
+        id="destinationsGrid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7"
+      >
+        <!-- Cards được render tự động bằng JavaScript -->
+      </div>
+
+      <!-- Empty State (Khi không tìm thấy địa điểm) -->
+      <div
+        id="emptyState"
+        class="hidden text-center py-16 bg-white rounded-3xl border border-slate-200/80 shadow-sm my-6"
+      >
+        <div
+          class="w-16 h-16 bg-ocean-light text-ocean rounded-2xl flex items-center justify-center mx-auto mb-4"
+        >
+          <i data-lucide="compass" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">
+          Không tìm thấy địa điểm phù hợp
+        </h3>
+        <p class="text-slate-500 max-w-md mx-auto mb-6 text-sm">
+          Hãy thử thay đổi từ khóa tìm kiếm hoặc chọn lại bộ lọc Châu lục và
+          Phong cách du lịch.
+        </p>
+        <button
+          onclick="resetAllFilters()"
+          class="bg-ocean text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-ocean-dark transition-colors"
+        >
+          Xem tất cả địa điểm
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 6. BENTO GRID FEATURE SECTION (TRẢI NGHIỆM ĐẶC SẮC) ==================== -->
+    <section
+      id="experiences"
+      class="py-16 sm:py-24 bg-slate-900 text-white relative overflow-hidden"
+    >
+      <!-- Decorative Glow -->
+      <div
+        class="absolute -top-40 -right-40 w-96 h-96 bg-ocean rounded-full blur-3xl opacity-30 pointer-events-none"
+      ></div>
+      <div
+        class="absolute -bottom-40 -left-40 w-96 h-96 bg-coral rounded-full blur-3xl opacity-20 pointer-events-none"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-coral text-xs font-bold uppercase tracking-widest mb-3"
+          >
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Trải Nghiệm Khác Biệt</span>
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Nền tảng cẩm nang du lịch
+            <span class="font-serif italic text-coral font-normal"
+              >thông minh</span
+            >
+          </h2>
+          <p class="mt-4 text-slate-300 text-base sm:text-lg">
+            Wanderlust World kết hợp dữ liệu thực tế từ các chuyên gia bản địa
+            và công nghệ hiện đại giúp chuyến đi của bạn trọn vẹn từng khoảnh
+            khắc.
+          </p>
+        </div>
+
+        <!-- Bento Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <!-- Bento Item 1: Gợi ý lịch trình thông minh (Span 7) -->
+          <div
+            class="md:col-span-7 rounded-3xl bg-gradient-to-br from-ocean to-slate-800 p-8 border border-white/10 shadow-xl flex flex-col justify-between relative overflow-hidden group"
+          >
+            <div class="relative z-10 max-w-md">
+              <div
+                class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-coral mb-6"
+              >
+                <i data-lucide="wand-2" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">
+                Gợi ý lịch trình thông minh 3 ngày
+              </h3>
+              <p
+                class="text-slate-200 text-sm sm:text-base leading-relaxed mb-6"
+              >
+                Không còn đau đầu sắp xếp thời gian. Mỗi địa điểm trên
+                Wanderlust World đều đi kèm lịch trình mẫu tối ưu hóa cung đường
+                di chuyển, điểm tham quan biểu tượng và trải nghiệm ẩm thực theo
+                từng buổi.
+              </p>
+              <button
+                onclick="openPlannerModal()"
+                class="inline-flex items-center gap-2 bg-coral hover:bg-coral-hover text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all shadow-lg"
+              >
+                <span>Tạo lịch trình cá nhân</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <!-- Decorative Mini Card -->
+            <div
+              class="mt-8 bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center gap-4"
+            >
+              <div
+                class="w-10 h-10 rounded-xl bg-coral/20 text-coral flex items-center justify-center shrink-0 font-bold"
+              >
+                3N
+              </div>
+              <div class="text-xs sm:text-sm">
+                <p class="font-bold text-white">
+                  Lịch trình mẫu đã được kiểm chứng
+                </p>
+                <p class="text-slate-300">
+                  Tiết kiệm 40% thời gian di chuyển giữa các điểm tham quan
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bento Item 2: Theo dõi thời tiết & mùa đẹp nhất (Span 5) -->
+          <div
+            class="md:col-span-5 rounded-3xl bg-slate-800/90 p-8 border border-white/10 shadow-xl flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-6"
+              >
+                <i data-lucide="sun-medium" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Thời điểm & Mùa đẹp nhất</h3>
+              <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                Ngắm lá đỏ Kyoto vào tháng 11 hay săn hoàng hôn Oia vào tháng 5?
+                Chúng tôi phân tích khí hậu và lượng khách để chỉ ra "thời điểm
+                vàng" cho từng điểm đến.
+              </p>
+            </div>
+            <div
+              class="mt-6 grid grid-cols-2 gap-3 pt-4 border-t border-white/10"
+            >
+              <div class="bg-white/5 p-3 rounded-2xl">
+                <span class="text-xs text-slate-400 block"
+                  >Kyoto, Nhật Bản</span
+                >
+                <span class="text-sm font-bold text-amber-400"
+                  >Tháng 3-4 & 10-11</span
+                >
+              </div>
+              <div class="bg-white/5 p-3 rounded-2xl">
+                <span class="text-xs text-slate-400 block"
+                  >Santorini, Hy Lạp</span
+                >
+                <span class="text-sm font-bold text-sky-400"
+                  >Tháng 4 - Tháng 10</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Bento Item 3: Cẩm nang văn hóa & ẩm thực bản địa (Span 5) -->
+          <div
+            class="md:col-span-5 rounded-3xl bg-slate-800/90 p-8 border border-white/10 shadow-xl flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6"
+              >
+                <i data-lucide="utensils" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">
+                Cẩm nang Văn hóa & Ẩm thực
+              </h3>
+              <p
+                class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6"
+              >
+                Khám phá chiều sâu lịch sử hàng ngàn năm và thưởng thức những
+                món ăn bản địa trứ danh không thể bỏ lỡ tại mỗi vùng đất bạn đặt
+                chân tới.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="px-3 py-1.5 rounded-full bg-white/10 text-xs font-medium text-slate-200"
+                >🥐 Croissant Paris</span
+              >
+              <span
+                class="px-3 py-1.5 rounded-full bg-white/10 text-xs font-medium text-slate-200"
+                >🍵 Kaiseki Kyoto</span
+              >
+              <span
+                class="px-3 py-1.5 rounded-full bg-white/10 text-xs font-medium text-slate-200"
+                >🦑 Chả mực Hạ Long</span
+              >
+              <span
+                class="px-3 py-1.5 rounded-full bg-white/10 text-xs font-medium text-slate-200"
+                >🍝 Carbonara Rome</span
+              >
+            </div>
+          </div>
+
+          <!-- Bento Item 4: Cộng đồng du khách toàn cầu (Span 7) -->
+          <div
+            class="md:col-span-7 rounded-3xl bg-gradient-to-r from-slate-800 via-slate-800 to-ocean/60 p-8 border border-white/10 shadow-xl flex flex-col sm:flex-row items-center gap-8 justify-between"
+          >
+            <div class="space-y-4 max-w-md">
+              <div
+                class="w-12 h-12 rounded-2xl bg-coral/20 text-coral flex items-center justify-center"
+              >
+                <i data-lucide="users" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-2xl font-bold">Cộng đồng Du khách Toàn cầu</h3>
+              <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                Hơn 120.000+ nhà du hành đã chia sẻ kinh nghiệm thực tế, mẹo săn
+                vé máy bay, lưu ý an toàn và dự toán chi phí minh bạch tại từng
+                quốc gia.
+              </p>
+            </div>
+            <div
+              class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/15 w-full sm:w-64 shrink-0"
+            >
+              <div class="flex items-center gap-1 text-amber-400 mb-2">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              </div>
+              <p class="text-xs italic text-slate-200 mb-4">
+                "Nhờ lịch trình 3 ngày tại Kyoto và Santorini của Wanderlust
+                World, chuyến trăng mật của vợ chồng mình vừa tiết kiệm vừa trọn
+                vẹn!"
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-coral flex items-center justify-center font-bold text-xs"
+                >
+                  M
+                </div>
+                <div>
+                  <p class="text-xs font-bold">Minh Anh & Hoàng Nam</p>
+                  <p class="text-[11px] text-slate-400">
+                    Travel Blogger • Hà Nội
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== QUICK TRAVEL TIPS / GUIDES SECTION ==================== -->
+    <section
+      id="guides"
+      class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-coral font-bold text-xs uppercase tracking-widest"
+          >Bí quyết xê dịch</span
+        >
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">
+          Hành trang cho chuyến đi
+          <span class="font-serif italic text-ocean">hoàn hảo</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div
+          class="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all"
+        >
+          <div
+            class="w-12 h-12 rounded-2xl bg-ocean-light text-ocean flex items-center justify-center mb-5"
+          >
+            <i data-lucide="wallet" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">
+            Tối ưu ngân sách thông minh
+          </h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Đặt vé máy bay và vé vào cửa các kỳ quan (như Đấu trường La Mã hay
+            Machu Picchu) trước ít nhất 2-3 tháng để tránh tình trạng hết vé và
+            tiết kiệm tới 30% chi phí.
+          </p>
+        </div>
+        <div
+          class="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all"
+        >
+          <div
+            class="w-12 h-12 rounded-2xl bg-coral-light text-coral flex items-center justify-center mb-5"
+          >
+            <i data-lucide="camera" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">
+            Khung giờ vàng nhiếp ảnh
+          </h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Luôn có mặt tại các kỳ quan như Đền Taj Mahal hoặc Tháp Eiffel vào
+            lúc bình minh (5:30 - 7:00 sáng) để tận hưởng không gian vắng lặng
+            và ánh sáng tự nhiên tuyệt đẹp.
+          </p>
+        </div>
+        <div
+          class="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all"
+        >
+          <div
+            class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-5"
+          >
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">
+            Tôn trọng văn hóa bản địa
+          </h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Tìm hiểu trước quy tắc trang phục khi ghé thăm đền chùa tại Kyoto,
+            Ấn Độ hoặc các khu bảo tồn linh thiêng của người Inca tại Peru.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 7. FOOTER ==================== -->
+    <footer id="footer" class="bg-white border-t border-slate-200 pt-16 pb-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Newsletter Box -->
+        <div
+          class="bg-gradient-to-r from-ocean to-ocean-dark rounded-3xl p-8 sm:p-12 text-white mb-16 shadow-xl relative overflow-hidden"
+        >
+          <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10"
+          >
+            <div class="lg:col-span-7">
+              <h3 class="text-2xl sm:text-3xl font-extrabold mb-2">
+                Nhận cẩm nang du lịch thế giới mỗi tuần
+              </h3>
+              <p class="text-slate-200 text-sm sm:text-base">
+                Đăng ký để nhận lịch trình chi tiết, bí quyết săn vé giá rẻ và
+                ưu đãi độc quyền từ Wanderlust World.
+              </p>
+            </div>
+            <div class="lg:col-span-5">
+              <form
+                onsubmit="handleNewsletterSubmit(event)"
+                class="flex flex-col sm:flex-row gap-3"
+              >
+                <input
+                  type="email"
+                  id="newsletterEmail"
+                  required
+                  placeholder="Nhập địa chỉ email của bạn..."
+                  class="flex-1 px-4 py-3.5 rounded-xl text-slate-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-coral"
+                />
+                <button
+                  type="submit"
+                  class="bg-coral hover:bg-coral-hover text-white font-bold px-6 py-3.5 rounded-xl transition-all shrink-0 shadow-md"
+                >
+                  Đăng ký ngay
+                </button>
+              </form>
+              <p
+                id="newsletterMsg"
+                class="text-xs text-emerald-300 mt-2 hidden"
+              >
+                ✨ Cảm ơn bạn đã đăng ký! Cẩm nang mới nhất đã được gửi tới hộp
+                thư.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Links Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-200"
+        >
+          <div class="lg:col-span-2 space-y-4">
+            <a href="#" class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-2xl bg-ocean flex items-center justify-center text-white"
+              >
+                <i data-lucide="compass" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span
+                  class="text-xl font-extrabold tracking-tight text-ocean block leading-none"
+                  >Wanderlust</span
+                >
+                <span
+                  class="text-xs font-semibold tracking-widest uppercase text-coral"
+                  >World</span
+                >
+              </div>
+            </a>
+            <p class="text-slate-500 text-sm leading-relaxed max-w-sm">
+              Nền tảng cẩm nang và khám phá các kỳ quan, địa điểm du lịch nổi
+              tiếng hàng đầu thế giới. Truyền cảm hứng xê dịch với thông tin
+              chuẩn xác, trực quan và sang trọng.
+            </p>
+            <div class="flex items-center gap-4 pt-2 text-slate-500">
+              <span
+                class="text-xs font-semibold uppercase tracking-wider text-slate-400"
+                >Theo dõi:</span
+              >
+              <a href="#footer" class="hover:text-ocean transition-colors"
+                ><i data-lucide="facebook" class="w-5 h-5"></i
+              ></a>
+              <a href="#footer" class="hover:text-ocean transition-colors"
+                ><i data-lucide="instagram" class="w-5 h-5"></i
+              ></a>
+              <a href="#footer" class="hover:text-ocean transition-colors"
+                ><i data-lucide="youtube" class="w-5 h-5"></i
+              ></a>
+            </div>
+          </div>
+
+          <div>
+            <h4
+              class="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider"
+            >
+              Châu lục nổi bật
+            </h4>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li>
+                <a
+                  href="#destinations"
+                  onclick="setTabFilter('Châu Âu')"
+                  class="hover:text-ocean transition-colors"
+                  >Du lịch Châu Âu</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#destinations"
+                  onclick="setTabFilter('Châu Á')"
+                  class="hover:text-ocean transition-colors"
+                  >Du lịch Châu Á</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#destinations"
+                  onclick="setTabFilter('Châu Mỹ')"
+                  class="hover:text-ocean transition-colors"
+                  >Du lịch Châu Mỹ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#destinations"
+                  onclick="setTabFilter('Kỳ quan')"
+                  class="hover:text-ocean transition-colors"
+                  >7 Kỳ quan Thế giới</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4
+              class="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider"
+            >
+              Tiện ích du lịch
+            </h4>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li>
+                <a
+                  href="#"
+                  onclick="
+                    openPlannerModal();
+                    return false;
+                  "
+                  class="hover:text-ocean transition-colors"
+                  >Lên lịch trình tự động</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#experiences"
+                  class="hover:text-ocean transition-colors"
+                  >Mùa đẹp nhất trong năm</a
+                >
+              </li>
+              <li>
+                <a href="#guides" class="hover:text-ocean transition-colors"
+                  >Mẹo tối ưu chi phí</a
+                >
+              </li>
+              <li>
+                <a href="#guides" class="hover:text-ocean transition-colors"
+                  >Văn hóa & Ẩm thực</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4
+              class="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider"
+            >
+              Liên hệ
+            </h4>
+            <ul class="space-y-3 text-sm text-slate-600">
+              <li class="flex items-start gap-2.5">
+                <i
+                  data-lucide="map-pin"
+                  class="w-4 h-4 text-coral shrink-0 mt-1"
+                ></i>
+                <span>Tòa nhà Saigon Centre, Quận 1, TP. Hồ Chí Minh</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="phone" class="w-4 h-4 text-coral shrink-0"></i>
+                <span>1900 6886 (Hỗ trợ 24/7)</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="mail" class="w-4 h-4 text-coral shrink-0"></i>
+                <span>hello@wanderlustworld.vn</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <div
+          class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4"
+        >
+          <p>
+            © 2026 Wanderlust World Vietnam. Thiết kế với cảm hứng khám phá toàn
+            cầu.
+          </p>
+          <div class="flex gap-6">
+            <a href="#footer" class="hover:text-ocean">Điều khoản sử dụng</a>
+            <a href="#footer" class="hover:text-ocean">Chính sách bảo mật</a>
+            <a href="#footer" class="hover:text-ocean">Bản quyền hình ảnh</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ==================== 5. DESTINATION DETAIL MODAL ==================== -->
+    <div
+      id="detailModal"
+      class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 animate-[fadeIn_0.25s_ease-out]"
+        onclick="event.stopPropagation()"
+      >
+        <!-- Modal Content Injected via JS -->
+        <div id="detailModalContent"></div>
+      </div>
+    </div>
+
+    <!-- ==================== TRIP PLANNER MODAL (NÚT LÊN LỊCH TRÌNH) ==================== -->
+    <div
+      id="plannerModal"
+      class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+      onclick="closePlannerModal()"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative"
+        onclick="event.stopPropagation()"
+      >
+        <button
+          onclick="closePlannerModal()"
+          class="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-3 mb-4">
+          <div
+            class="w-11 h-11 rounded-2xl bg-ocean text-white flex items-center justify-center"
+          >
+            <i data-lucide="calendar-heart" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-900">
+              Thiết Kế Lịch Trình Cá Nhân
+            </h3>
+            <p class="text-xs text-slate-500">
+              Nhận bản kế hoạch chi tiết miễn phí qua Email
+            </p>
+          </div>
+        </div>
+
+        <form onsubmit="handlePlannerSubmit(event)" class="space-y-4 mt-6">
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 mb-1.5"
+              >Chọn điểm đến mơ ước</label
+            >
+            <select
+              id="plannerDestination"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 font-semibold text-slate-800 focus:outline-none focus:border-ocean"
+            >
+              <option value="Santorini, Hy Lạp">Santorini, Hy Lạp</option>
+              <option value="Kyoto, Nhật Bản">Kyoto, Nhật Bản</option>
+              <option value="Paris, Pháp">Paris, Pháp</option>
+              <option value="Vịnh Hạ Long, Việt Nam">
+                Vịnh Hạ Long, Việt Nam
+              </option>
+              <option value="Machu Picchu, Peru">Machu Picchu, Peru</option>
+              <option value="Đấu trường La Mã Rome, Ý">
+                Đấu trường La Mã Rome, Ý
+              </option>
+              <option value="Đền Taj Mahal, Ấn Độ">Đền Taj Mahal, Ấn Độ</option>
+              <option value="Grand Canyon, Mỹ">Grand Canyon, Mỹ</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 mb-1.5"
+                >Số ngày dự kiến</label
+              >
+              <select
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 font-medium text-slate-800 focus:outline-none focus:border-ocean"
+              >
+                <option>3 Ngày 2 Đêm (Tiêu chuẩn)</option>
+                <option>5 Ngày 4 Đêm (Khám phá sâu)</option>
+                <option>7+ Ngày (Hành trình xuyên lục địa)</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 mb-1.5"
+                >Ngân sách dự kiến / người</label
+              >
+              <select
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 font-medium text-slate-800 focus:outline-none focus:border-ocean"
+              >
+                <option>Tiết kiệm (Dưới 20 triệu)</option>
+                <option selected>Tiện nghi (25 - 50 triệu)</option>
+                <option>Nghỉ dưỡng Cao cấp (Trên 60 triệu)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 mb-1.5"
+              >Email nhận lịch trình PDF</label
+            >
+            <input
+              type="email"
+              required
+              placeholder="tenban@email.com"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-coral hover:bg-coral-hover text-white font-bold py-3.5 rounded-xl shadow-lg shadow-coral/30 transition-all flex items-center justify-center gap-2 mt-2"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Khởi tạo lịch trình ngay</span>
+          </button>
+        </form>
+
+        <div
+          id="plannerSuccess"
+          class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium text-center"
+        >
+          🎉 Tuyệt vời! Lịch trình cá nhân hóa cho điểm đến của bạn đã được tạo
+          và gửi vào hộp thư.
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div
+      id="toast"
+      class="fixed bottom-6 right-6 z-50 translate-y-24 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 border border-white/10"
+    >
+      <i data-lucide="check-circle-2" class="w-5 h-5 text-coral shrink-0"></i>
+      <span id="toastMessage" class="text-sm font-medium"
+        >Đã lưu địa điểm vào danh sách yêu thích!</span
+      >
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+      // Dữ liệu chi tiết 8 địa điểm nổi tiếng thế giới
+      const destinationsData = [
+        {
+          id: "paris",
+          name: "Paris & Tháp Eiffel",
+          country: "Pháp",
+          continent: "Châu Âu",
+          isWonder: false,
+          style: "Nghỉ dưỡng & Lãng mạn",
+          rating: 4.9,
+          reviews: "14.2k",
+          bestTime: "Tháng 4 - Tháng 6 & Tháng 9 - 10",
+          cost: "35 - 50 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Kinh đô ánh sáng hoa lệ với tháp Eiffel biểu tượng, bảo tàng Louvre vĩ đại và những quán cà phê vỉa hè đậm chất thơ bên bờ sông Seine.",
+          cultureHistory:
+            "Paris được hình thành từ thế kỷ thứ 3 TCN bên dòng sông Seine. Nơi đây là cái nôi của thời kỳ Khai sáng, nghệ thuật Phục hưng hiện đại, thời trang cao cấp và kiến trúc Gothic/Haussmann kinh điển được cả thế giới ngưỡng mộ.",
+          cuisine: [
+            "Bánh sừng bò (Croissant) bơ Pháp & Macaron Pierre Hermé",
+            "Gan ngỗng áp chảo (Foie Gras) và Ốc sên nướng bơ tỏi (Escargot)",
+            "Bò hầm rượu vang đỏ Bourguignon & Rượu Champagne thượng hạng",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Biểu tượng Kinh đô Ánh sáng",
+              desc: "Sáng chụp ảnh tại Quảng trường Trocadéro & chinh phục Tháp Eiffel. Chiều dạo bước Khải Hoàn Môn, đại lộ Champs-Élysées. Tối du thuyền ngắm hoàng hôn trên sông Seine.",
+            },
+            {
+              day: "Ngày 2: Nghệ thuật & Lịch sử vĩ đại",
+              desc: "Dành trọn buổi sáng khám phá Bảo tàng Louvre (chiêm ngưỡng bức họa Mona Lisa). Chiều thăm Nhà thờ Đức Bà Paris, khu phố Latin và thưởng thức cà phê vỉa hè.",
+            },
+            {
+              day: "Ngày 3: Đồi Montmartre & Cung điện Versailles",
+              desc: "Sáng tham quan Cung điện Versailles lộng lẫy. Chiều dạo khu phố nghệ sĩ Montmartre, Vương cung thánh đường Sacré-Cœur và mua sắm tại Galeries Lafayette.",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay khứ hồi: ~18-22 triệu • Khách sạn 3-4 sao: ~4 triệu/đêm • Ăn uống & Vé tham quan: ~8-10 triệu.",
+        },
+        {
+          id: "kyoto",
+          name: "Cố đô Kyoto",
+          country: "Nhật Bản",
+          continent: "Châu Á",
+          isWonder: false,
+          style: "Văn hóa & Lịch sử",
+          rating: 4.95,
+          reviews: "11.8k",
+          bestTime: "Tháng 3 - 4 (Hoa anh đào) & Tháng 11 (Lá đỏ)",
+          cost: "25 - 38 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Trái tim văn hóa truyền thống của Nhật Bản với hàng ngàn cổng Torii đỏ rực tại Fushimi Inari, rừng trúc Arashiyama và phố cổ Gion.",
+          cultureHistory:
+            "Từng là kinh đô hoàng gia của Nhật Bản suốt hơn 1.000 năm (794 - 1868), Kyoto sở hữu hơn 1.600 ngôi chùa Phật giáo, 400 đền thờ Thần đạo và 17 Di sản Thế giới được UNESCO công nhận.",
+          cuisine: [
+            "Ẩm thực cung đình Kaiseki Ryori tinh tế theo mùa",
+            "Matcha Uji nguyên chất, kem trà xanh & bánh ngọt Wagashi",
+            "Đậu phụ Yudofu truyền thống và Bò Wagyu nướng tại phố Pontocho",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Ngàn cổng Torii & Phố cổ Gion",
+              desc: "Sáng sớm thăm đền Fushimi Inari Taisha. Chiều thuê Kimono dạo chùa Thanh Thủy (Kiyomizu-dera), dốc cổ Sannenzaka. Tối tản bộ phố cổ Gion tìm gặp Geisha.",
+            },
+            {
+              day: "Ngày 2: Rừng trúc Arashiyama & Chùa Vàng",
+              desc: "Sáng khám phá rừng trúc Arashiyama và cầu Togetsukyo. Chiều chiêm ngưỡng Chùa Vàng (Kinkaku-ji) soi bóng xuống hồ gương.",
+            },
+            {
+              day: "Ngày 3: Chợ Nishiki & Trà đạo Uji",
+              desc: 'Sáng thưởng thức ẩm thực đường phố tại chợ Nishiki ("nhà bếp của Kyoto"). Chiều trải nghiệm nghi thức Trà đạo truyền thống và mua quà lưu niệm.',
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay khứ hồi: ~10-14 triệu • Lưu trú Ryokan/Hotel: ~2.5-3.5 triệu/đêm • Tàu JR Pass & Ăn uống: ~8 triệu.",
+        },
+        {
+          id: "santorini",
+          name: "Đảo ngọc Santorini",
+          country: "Hy Lạp",
+          continent: "Châu Âu",
+          isWonder: false,
+          style: "Nghỉ dưỡng & Lãng mạn",
+          rating: 4.9,
+          reviews: "9.6k",
+          bestTime: "Tháng 5 - Tháng 10 (Nắng ấm Địa Trung Hải)",
+          cost: "40 - 60 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Thiên đường biển Aegean với những ngôi nhà trắng muốt mái vòm xanh coban cheo leo trên vách đá núi lửa và hoàng hôn đẹp nhất hành tinh.",
+          cultureHistory:
+            "Được hình thành sau một vụ phun trào núi lửa khổng lồ vào thế kỷ 16 TCN, Santorini mang kiến trúc Cycladic độc bản và được cho là nguồn cảm hứng của truyền thuyết lục địa Atlantis cổ đại.",
+          cuisine: [
+            "Bạch tuộc nướng than hoa tươi sống bên bờ biển Amoudi",
+            "Salad Hy Lạp với phô mai Feta, dầu ô liu và đậu nghiền Fava",
+            "Thịt nướng Gyros & Rượu vang trắng Assyrtiko trồng trên đất núi lửa",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Thị trấn Fira & Làng Oia huyền thoại",
+              desc: "Nhận phòng khách sạn view miệng núi lửa Caldera. Chiều trekking cung đường ven biển từ Fira sang Oia và đón khoảnh khắc hoàng hôn rực rỡ tại lâu đài cổ Oia.",
+            },
+            {
+              day: "Ngày 2: Du thuyền Catamaran & Biển Đỏ",
+              desc: "Sáng khám phá Bãi biển Đỏ (Red Beach) và làng cổ Pyrgos. Chiều lên du thuyền Catamaran tắm suối nước nóng núi lửa và thưởng thức BBQ trên biển.",
+            },
+            {
+              day: "Ngày 3: Thưởng rượu vang & Làng Imerovigli",
+              desc: "Sáng chụp ảnh tại Three Bells of Fira. Chiều ghé thăm xưởng rượu vang Santo Wines ngắm toàn cảnh vịnh biển Aegean.",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay + Phà/Bay nội địa: ~24 triệu • Cave Hotel view biển: ~5-7 triệu/đêm • Ăn uống & Du thuyền: ~10 triệu.",
+        },
+        {
+          id: "machu-picchu",
+          name: "Thành cổ Machu Picchu",
+          country: "Peru",
+          continent: "Châu Mỹ",
+          isWonder: true,
+          style: "Thiên nhiên & Khám phá",
+          rating: 4.95,
+          reviews: "8.4k",
+          bestTime: "Tháng 4 - Tháng 10 (Mùa khô dãy Andes)",
+          cost: "55 - 75 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Kỳ quan thế giới mới ẩn mình trong mây mù trên đỉnh núi Andes ở độ cao 2.430m — biểu tượng rực rỡ nhất của Đế chế Inca huyền bí.",
+          cultureHistory:
+            "Xây dựng vào khoảng năm 1450 dưới thời Hoàng đế Inca Pachacuti và bị bỏ hoang khi người Tây Ban Nha tới. Các bức tường đá khổng lồ được ghép khít hoàn hảo mà không cần một giọt vữa nào.",
+          cuisine: [
+            "Hải sản tái chanh Ceviche — Quốc hồn quốc túy của ẩm thực Peru",
+            "Thịt bò xào Lomo Saltado & Thịt lạc đà Alpaca nướng thảo mộc",
+            "Trà lá Coca giúp thích nghi độ cao & Cocktail Pisco Sour",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Cố đô Cusco & Thung lũng Linh thiêng",
+              desc: "Khám phá quảng trường Plaza de Armas tại Cusco, uống trà Coca làm quen độ cao. Chiều thăm ruộng bậc thang Moray và mỏ muối Maras.",
+            },
+            {
+              day: "Ngày 2: Tàu hỏa Vistadome & Đỉnh Machu Picchu",
+              desc: "Đi tàu kính toàn cảnh dọc sông Urubamba đến Aguas Calientes. Khám phá trọn vẹn Thành cổ Machu Picchu, Đền Mặt Trời và Đá thiêng Intihuatana.",
+            },
+            {
+              day: "Ngày 3: Chinh phục Núi Cầu Vồng Vinicunca",
+              desc: "Hành trình chiêm ngưỡng dãy núi Cầu Vồng (Rainbow Mountain) ở độ cao hơn 5.000m với những dải màu khoáng chất tự nhiên kỳ ảo.",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay quốc tế sang Nam Mỹ: ~35-42 triệu • Tàu Vistadome & Vé Machu Picchu: ~6 triệu • Lưu trú & Tour: ~14 triệu.",
+        },
+        {
+          id: "ha-long",
+          name: "Vịnh Hạ Long",
+          country: "Việt Nam",
+          continent: "Châu Á",
+          isWonder: true,
+          style: "Thiên nhiên & Khám phá",
+          rating: 4.9,
+          reviews: "16.5k",
+          bestTime: "Tháng 3 - Tháng 5 & Tháng 9 - Tháng 11",
+          cost: "4 - 12 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Kỳ quan thiên nhiên thế giới với gần 2.000 hòn đảo đá vôi kỳ vĩ nhô lên từ làn nước biển xanh ngọc bích cùng hệ thống hang động tráng lệ.",
+          cultureHistory:
+            "Được UNESCO nhiều lần vinh danh là Di sản Thiên nhiên Thế giới, Vịnh Hạ Long gắn liền với truyền thuyết Rồng mẹ và đàn Rồng con phun châu nhả ngọc tạo thành bức tường thành bảo vệ bờ cõi.",
+          cuisine: [
+            "Chả mực giã tay Hạ Long vàng ruộm giòn sần sật",
+            "Hải sản tươi sống: Tôm hùm, bề bề rang muối, cù kỳ hấp, sá sùng",
+            "Sữa chua trân châu Hạ Long & Bún bề bề nóng hổi",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Du thuyền 5 sao & Hang Sửng Sốt",
+              desc: "Lên du thuyền hạng sang giữa vịnh. Tham quan Hang Sửng Sốt kỳ vĩ, tắm biển và leo đỉnh đảo Ti Tốp ngắm toàn cảnh vịnh 360 độ.",
+            },
+            {
+              day: "Ngày 2: Chèo Kayak Hang Luồn & Làng chài Cửa Vạn",
+              desc: "Sáng tập Thái Cực Quyền trên boong tàu, chèo thuyền Kayak xuyên qua Hang Luồn và khám phá nét văn hóa làng chài nổi Cửa Vạn.",
+            },
+            {
+              day: "Ngày 3: Thủy phi cơ ngắm vịnh & Bảo tàng Quảng Ninh",
+              desc: "Trải nghiệm 25 phút bay thủy phi cơ ngắm Vịnh Hạ Long từ độ cao 300m, sau đó check-in Bảo tàng Quảng Ninh và thưởng thức đặc sản phố biển.",
+            },
+          ],
+          costBreakdown:
+            "Du thuyền 5 sao trọn gói 2N1Đ: ~3.5 - 6 triệu • Di chuyển cao tốc/Thủy phi cơ: ~1 - 2.5 triệu • Ăn uống & Vui chơi: ~2 triệu.",
+        },
+        {
+          id: "rome",
+          name: "Đấu trường La Mã Rome",
+          country: "Ý",
+          continent: "Châu Âu",
+          isWonder: true,
+          style: "Văn hóa & Lịch sử",
+          rating: 4.85,
+          reviews: "13.9k",
+          bestTime: "Tháng 4 - Tháng 6 & Tháng 9 - 10",
+          cost: "32 - 48 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            '"Thành phố Vĩnh hằng" nơi mỗi góc phố đều là một bảo tàng sống động với Đấu trường Colosseum, Đài phun nước Trevi và Tòa thánh Vatican.',
+          cultureHistory:
+            "Xây dựng từ năm 72 SCN, Đấu trường La Mã (Colosseum) từng có sức chứa hơn 50.000 khán giả, là biểu tượng bất diệt của quyền lực và kỹ thuật kiến trúc vòm vượt thời đại của Đế chế La Mã.",
+          cuisine: [
+            "Mì Ý nguyên bản: Pasta Carbonara, Cacio e Pepe & Amatriciana",
+            "Pizza đế mỏng kiểu Rome giòn rụm & Bánh Tiramisu truyền thống",
+            "Kem Gelato thủ công và cà phê Espresso đậm đà",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: La Mã Cổ đại hùng tráng",
+              desc: "Tham quan bên trong Đấu trường Colosseum, Quảng trường La Mã (Roman Forum) và Đồi Palatine — nơi khởi nguồn của thành Rome.",
+            },
+            {
+              day: "Ngày 2: Tòa thánh Vatican & Đài phun nước Trevi",
+              desc: "Sáng khám phá Bảo tàng Vatican, Nhà nguyện Sistine và Đại vương cung thánh đường Thánh Phêrô. Chiều tung đồng xu ước nguyện tại Trevi và thăm Đền Pantheon.",
+            },
+            {
+              day: "Ngày 3: Bậc thang Tây Ban Nha & Khu phố Trastevere",
+              desc: "Dạo chơi Piazza Navona, Bậc thang Tây Ban Nha và thưởng thức bữa tối ẩm thực địa phương tại khu phố cổ Trastevere đầy sắc màu.",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay khứ hồi: ~18-22 triệu • Khách sạn trung tâm: ~3.5 triệu/đêm • Vé tham quan VIP & Ẩm thực: ~8 triệu.",
+        },
+        {
+          id: "taj-mahal",
+          name: "Đền Taj Mahal",
+          country: "Ấn Độ",
+          continent: "Châu Á",
+          isWonder: true,
+          style: "Văn hóa & Lịch sử",
+          rating: 4.8,
+          reviews: "10.1k",
+          bestTime: "Tháng 10 - Tháng 3 (Thời tiết mát dịu)",
+          cost: "18 - 28 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Kiệt tác kiến trúc bằng đá cẩm thạch trắng tinh khiết được khảm đá quý bên bờ sông Yamuna — biểu tượng của tình yêu vĩnh cửu.",
+          cultureHistory:
+            "Được Hoàng đế Mughal Shah Jahan huy động 20.000 nghệ nhân xây dựng suốt 22 năm (1632 - 1653) để tưởng nhớ người vợ yêu quý Mumtaz Mahal. Ngôi đền đổi màu kỳ ảo theo ánh nắng mặt trời trong ngày.",
+          cuisine: [
+            "Gà nướng lò đất Tandoori & Gà sốt bơ Butter Chicken thơm ngậy",
+            "Cơm trộn thảo mộc Biryani hoàng gia Mughal & Bánh mì Naan bơ tỏi",
+            "Trà sữa gia vị Masala Chai và sữa chua xoài Mango Lassi",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: Bình minh huyền thoại tại Taj Mahal",
+              desc: "Đón ánh bình minh đầu tiên nhuộm hồng mái vòm cẩm thạch trắng của Taj Mahal. Chiều tham quan Pháo đài Đỏ Agra (Agra Fort) uy nghiêm.",
+            },
+            {
+              day: "Ngày 2: Vườn Mehtab Bagh & Lăng mộ Baby Taj",
+              desc: "Thăm lăng mộ Itimad-ud-Daulah tinh xảo. Chiều ngắm hoàng hôn Taj Mahal nhìn từ khu vườn đối diện bên kia bờ sông Yamuna.",
+            },
+            {
+              day: "Ngày 3: Thành phố cổ Fatehpur Sikri & Làng nghề",
+              desc: "Khám phá kinh đô cổ Fatehpur Sikri và tìm hiểu nghệ thuật khảm đá quý thủ công truyền thống Pietra Dura của các nghệ nhân Agra.",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay thẳng Ấn Độ: ~7-10 triệu • Tàu cao tốc Gatimaan & Khách sạn 4-5 sao: ~6 triệu • Vé & Ăn uống: ~5 triệu.",
+        },
+        {
+          id: "grand-canyon",
+          name: "Đại vực Grand Canyon",
+          country: "Mỹ",
+          continent: "Châu Mỹ",
+          isWonder: true,
+          style: "Thiên nhiên & Khám phá",
+          rating: 4.9,
+          reviews: "12.3k",
+          bestTime: "Tháng 3 - Tháng 5 & Tháng 9 - Tháng 11",
+          cost: "45 - 65 triệu VNĐ",
+          image:
+            "https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1000&q=80",
+          shortDesc:
+            "Hẻm núi khổng lồ dài 446km được dòng sông Colorado chạm khắc qua hàng triệu năm với những tầng địa chất đỏ cam rực rỡ dưới nắng.",
+          cultureHistory:
+            "Lưu giữ lịch sử địa chất gần 2 tỷ năm của Trái Đất. Đây cũng là vùng đất thiêng liêng của các bộ lạc người Mỹ bản địa (Havasupai, Hopi, Navajo) sinh sống suốt hàng ngàn năm qua.",
+          cuisine: [
+            "Bít tết bò Mỹ nướng lửa hồng kiểu miền Tây (Southwestern Steak)",
+            "Bánh Navajo Tacos truyền thống của người bản địa Arizona",
+            "Sườn nướng BBQ hun khói và Bia thủ công Grand Canyon Brewing",
+          ],
+          itinerary: [
+            {
+              day: "Ngày 1: South Rim & Điểm ngắm Mather Point",
+              desc: "Dạo cung đường Rim Trail dọc rìa Nam (South Rim), ghé thăm Desert View Watchtower và đón hoàng hôn rực lửa tại Hopi Point.",
+            },
+            {
+              day: "Ngày 2: Trực thăng vượt đại vực & Cầu kính Skywalk",
+              desc: "Trải nghiệm bay trực thăng ngắm toàn cảnh hẻm núi và dòng sông Colorado từ trên cao. Chiều thử thách bước đi trên cầu kính Skywalk.",
+            },
+            {
+              day: "Ngày 3: Cung đường Bright Angel Trail & Horseshoe Bend",
+              desc: "Sáng trekking một chặng cung đường Bright Angel Trail. Chiều kết hợp ghé thăm khúc cua móng ngựa Horseshoe Bend và Hẻm núi Linh dương (Antelope Canyon).",
+            },
+          ],
+          costBreakdown:
+            "Vé máy bay khứ hồi Mỹ: ~25-32 triệu • Thuê xe tự lái & Khách sạn/Lodge: ~12 triệu • Trực thăng & Ăn uống: ~10 triệu.",
+        },
+      ];
+
+      // Trạng thái lọc hiện tại
+      let currentTab = "all";
+      let savedDestinations = new Set();
+      let showOnlySaved = false;
+
+      // Khởi chạy khi tải trang
+      window.addEventListener("DOMContentLoaded", () => {
+        renderDestinations();
+        lucide.createIcons();
+      });
+
+      // Hàm render danh sách Cards
+      function renderDestinations() {
+        const grid = document.getElementById("destinationsGrid");
+        const emptyState = document.getElementById("emptyState");
+        const filterStatus = document.getElementById("filterStatus");
+        const resultCountText = document.getElementById("resultCountText");
+
+        const searchQuery = document
+          .getElementById("searchInput")
+          .value.trim()
+          .toLowerCase();
+        const styleFilter = document.getElementById("styleSelect").value;
+
+        // Lọc dữ liệu
+        const filtered = destinationsData.filter((item) => {
+          // Lọc theo danh sách yêu thích nếu đang bật
+          if (showOnlySaved && !savedDestinations.has(item.id)) return false;
+
+          // Lọc theo Tab Châu lục / Kỳ quan
+          const matchesTab =
+            currentTab === "all" ||
+            item.continent === currentTab ||
+            (currentTab === "Kỳ quan" && item.isWonder);
+
+          // Lọc theo từ khóa tìm kiếm
+          const matchesSearch =
+            !searchQuery ||
+            item.name.toLowerCase().includes(searchQuery) ||
+            item.country.toLowerCase().includes(searchQuery) ||
+            item.shortDesc.toLowerCase().includes(searchQuery);
+
+          // Lọc theo phong cách
+          const matchesStyle =
+            styleFilter === "all" || item.style === styleFilter;
+
+          return matchesTab && matchesSearch && matchesStyle;
+        });
+
+        // Hiển thị thông báo số lượng nếu có bộ lọc
+        if (
+          currentTab !== "all" ||
+          searchQuery !== "" ||
+          styleFilter !== "all" ||
+          showOnlySaved
+        ) {
+          filterStatus.classList.remove("hidden");
+          filterStatus.classList.add("flex");
+          resultCountText.textContent = showOnlySaved
+            ? `Đang xem ${filtered.length} địa điểm đã lưu yêu thích`
+            : `Tìm thấy ${filtered.length} địa điểm phù hợp`;
+        } else {
+          filterStatus.classList.add("hidden");
+          filterStatus.classList.remove("flex");
+        }
+
+        if (filtered.length === 0) {
+          grid.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+
+        grid.innerHTML = filtered
+          .map((item) => {
+            const isSaved = savedDestinations.has(item.id);
+            return `
+                <article class="destination-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm flex flex-col justify-between group">
+                    <div>
+                        <!-- Image Container -->
+                        <div class="relative h-60 overflow-hidden bg-slate-200">
+                            <img src="${item.image}" 
+                                 alt="${item.name}" 
+                                 onerror="this.src='https://placehold.co/800x600/0F4C81/FFFFFF?text=${encodeURIComponent(item.name)}'"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/20"></div>
+
+                            <!-- Top Badges -->
+                            <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-ocean text-xs font-bold shadow-sm">
+                                        ${item.country} • ${item.continent}
+                                    </span>
+                                    ${
+                                      item.isWonder
+                                        ? `
+                                    <span class="px-2.5 py-1 rounded-full bg-amber-400/95 text-slate-900 text-[11px] font-extrabold shadow-sm flex items-center gap-1">
+                                        <i data-lucide="award" class="w-3 h-3"></i> Kỳ quan
+                                    </span>`
+                                        : ""
+                                    }
+                                </div>
+
+                                <!-- Favorite Heart Button -->
+                                <button onclick="toggleFavorite('${item.id}', this)" 
+                                        class="w-9 h-9 rounded-full ${isSaved ? "bg-coral text-white" : "bg-white/90 text-slate-700 hover:text-coral"} backdrop-blur-md flex items-center justify-center shadow-md transition-all shrink-0"
+                                        title="Yêu thích">
+                                    <i data-lucide="heart" class="w-4 h-4 ${isSaved ? "fill-current" : ""}"></i>
+                                </button>
+                            </div>
+
+                            <!-- Bottom Overlay Rating & Style -->
+                            <div class="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white">
+                                <span class="text-xs font-medium bg-slate-900/60 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-white/15">
+                                    ${item.style}
+                                </span>
+                                <div class="flex items-center gap-1 bg-slate-900/60 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-bold">
+                                    <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400 fill-current"></i>
+                                    <span>${item.rating}</span>
+                                    <span class="text-slate-300 font-normal">(${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-5">
+                            <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-ocean transition-colors line-clamp-1">
+                                ${item.name}
+                            </h3>
+                            <p class="mt-2 text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                                ${item.shortDesc}
+                            </p>
+
+                            <!-- Meta Info -->
+                            <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs">
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-ocean shrink-0"></i>
+                                    <span class="truncate"><strong class="text-slate-800">Mùa đẹp:</strong> ${item.bestTime}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <i data-lucide="banknote" class="w-4 h-4 text-coral shrink-0"></i>
+                                    <span><strong class="text-slate-800">Chi phí:</strong> <span class="text-ocean font-bold">${item.cost}</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer CTA -->
+                    <div class="px-5 pb-5 pt-1">
+                        <button onclick="openDetailModal('${item.id}')" 
+                                class="w-full py-3 px-4 rounded-xl bg-ocean-light hover:bg-ocean text-ocean hover:text-white font-bold text-sm transition-all flex items-center justify-center gap-2 group/btn">
+                            <span>Khám phá chi tiết</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </article>
+                `;
+          })
+          .join("");
+
+        lucide.createIcons();
+      }
+
+      // Chuyển đổi Tab Châu lục
+      function setTabFilter(tabName) {
+        currentTab = tabName;
+        showOnlySaved = false;
+
+        // Đồng bộ select dropdown trên thanh tìm kiếm
+        const selectEl = document.getElementById("continentSelect");
+        if (selectEl) selectEl.value = tabName;
+
+        // Cập nhật giao diện nút Tab
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          if (btn.getAttribute("data-tab") === tabName) {
+            btn.className =
+              "tab-btn active px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-ocean text-white shadow-md shadow-ocean/20 shrink-0 flex items-center gap-1.5";
+          } else {
+            btn.className =
+              "tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shrink-0 flex items-center gap-1.5";
+          }
+        });
+
+        renderDestinations();
+      }
+
+      // Đồng bộ khi người dùng chọn từ Dropdown Châu lục ở Hero
+      function syncDropdownToTab(val) {
+        setTabFilter(val);
+      }
+
+      // Xử lý tìm kiếm & lọc phong cách
+      function handleSearchAndFilter() {
+        renderDestinations();
+      }
+
+      // Đặt lại toàn bộ bộ lọc
+      function resetAllFilters() {
+        document.getElementById("searchInput").value = "";
+        document.getElementById("styleSelect").value = "all";
+        showOnlySaved = false;
+        setTabFilter("all");
+      }
+
+      // Cuộn mượt xuống khu vực Điểm đến
+      function scrollToDestinations() {
+        handleSearchAndFilter();
+        document
+          .getElementById("destinations")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Thả tim Yêu thích địa điểm
+      function toggleFavorite(id, btnEl) {
+        const item = destinationsData.find((d) => d.id === id);
+        if (savedDestinations.has(id)) {
+          savedDestinations.delete(id);
+          showToast(`Đã bỏ lưu "${item.name}"`);
+        } else {
+          savedDestinations.add(id);
+          btnEl.classList.add("heart-active");
+          showToast(`Đã lưu "${item.name}" vào danh sách yêu thích!`);
+        }
+
+        updateSavedBadges();
+        renderDestinations();
+      }
+
+      // Cập nhật số lượng trên icon Trái tim ở Navbar
+      function updateSavedBadges() {
+        const count = savedDestinations.size;
+        const badgeDesktop = document.getElementById("savedCountBadge");
+        const badgeMobile = document.getElementById("savedCountBadgeMobile");
+
+        if (count > 0) {
+          badgeDesktop.textContent = count;
+          badgeDesktop.classList.remove("scale-0");
+          badgeMobile.textContent = count;
+          badgeMobile.classList.remove("scale-0");
+        } else {
+          badgeDesktop.classList.add("scale-0");
+          badgeMobile.classList.add("scale-0");
+        }
+      }
+
+      // Lọc nhanh các địa điểm đã thả tim
+      function toggleSavedFilter() {
+        if (savedDestinations.size === 0) {
+          showToast(
+            "Bạn chưa lưu địa điểm nào. Hãy bấm biểu tượng trái tim trên các địa điểm!",
+          );
+          return;
+        }
+        showOnlySaved = !showOnlySaved;
+        renderDestinations();
+        document
+          .getElementById("destinations")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Mở Modal Chi tiết Địa điểm
+      function openDetailModal(id) {
+        const item = destinationsData.find((d) => d.id === id);
+        if (!item) return;
+
+        const modal = document.getElementById("detailModal");
+        const content = document.getElementById("detailModalContent");
+
+        content.innerHTML = `
+                <!-- Modal Banner Image -->
+                <div class="relative h-64 sm:h-80 w-full">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                    
+                    <!-- Close Button -->
+                    <button onclick="closeDetailModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-900/60 hover:bg-coral text-white backdrop-blur-md flex items-center justify-center transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Title Overlay -->
+                    <div class="absolute bottom-6 left-6 right-6 text-white">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="px-3 py-1 rounded-full bg-coral text-white text-xs font-bold uppercase tracking-wider">${item.country} • ${item.continent}</span>
+                            <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold">${item.style}</span>
+                            <span class="px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-xs font-bold flex items-center gap-1">
+                                ★ ${item.rating} (${item.reviews} đánh giá)
+                            </span>
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold">${item.name}</h2>
+                    </div>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 sm:p-8 space-y-8">
+                    <!-- Quick Highlights Bar -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-ocean-light/70 border border-ocean/10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-ocean text-white flex items-center justify-center shrink-0">
+                                <i data-lucide="sun" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold uppercase text-slate-500">Thời điểm lý tưởng nhất</p>
+                                <p class="text-sm font-bold text-slate-900">${item.bestTime}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-coral text-white flex items-center justify-center shrink-0">
+                                <i data-lucide="wallet" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold uppercase text-slate-500">Chi phí tham khảo (Trọn gói)</p>
+                                <p class="text-sm font-bold text-ocean">${item.cost} / người</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Culture & History -->
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 mb-2">
+                            <i data-lucide="landmark" class="w-5 h-5 text-ocean"></i>
+                            <span>Giới thiệu Lịch sử & Văn hóa</span>
+                        </h3>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            ${item.cultureHistory}
+                        </p>
+                    </div>
+
+                    <!-- 3-Day Suggested Itinerary -->
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 mb-4">
+                            <i data-lucide="map" class="w-5 h-5 text-coral"></i>
+                            <span>Lịch trình gợi ý 3 ngày tối ưu</span>
+                        </h3>
+                        <div class="space-y-3">
+                            ${item.itinerary
+                              .map(
+                                (step, idx) => `
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex gap-4 items-start">
+                                    <div class="w-8 h-8 rounded-xl bg-ocean text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                                        0${idx + 1}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 text-sm sm:text-base">${step.day}</h4>
+                                        <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">${step.desc}</p>
+                                    </div>
+                                </div>
+                            `,
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+
+                    <!-- Local Cuisine & Cost Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-200/60">
+                            <h4 class="font-extrabold text-slate-900 flex items-center gap-2 mb-3 text-sm sm:text-base">
+                                <i data-lucide="utensils-crossed" class="w-4 h-4 text-amber-600"></i>
+                                <span>Ẩm thực đặc trưng phải thử</span>
+                            </h4>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                                ${item.cuisine
+                                  .map(
+                                    (food) => `
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-coral font-bold">•</span>
+                                        <span>${food}</span>
+                                    </li>
+                                `,
+                                  )
+                                  .join("")}
+                            </ul>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-extrabold text-slate-900 flex items-center gap-2 mb-2 text-sm sm:text-base">
+                                    <i data-lucide="pie-chart" class="w-4 h-4 text-ocean"></i>
+                                    <span>Phân bổ chi phí dự kiến</span>
+                                </h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    ${item.costBreakdown}
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
+                                <span class="text-xs text-slate-500">Cần lịch trình chi tiết hơn?</span>
+                                <button onclick="closeDetailModal(); openPlannerForDestination('${item.name}, ${item.country}');" class="text-xs font-bold text-coral hover:underline flex items-center gap-1">
+                                    <span>Nhận file PDF miễn phí</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-200">
+                        <button onclick="closeDetailModal()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-100 transition-colors">
+                            Đóng cửa sổ
+                        </button>
+                        <button onclick="closeDetailModal(); openPlannerForDestination('${item.name}, ${item.country}');" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-ocean hover:bg-ocean-dark text-white font-bold text-sm shadow-lg shadow-ocean/20 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-coral"></i>
+                            <span>Lên lịch trình đi ${item.name}</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        lucide.createIcons();
+      }
+
+      function closeDetailModal() {
+        document.getElementById("detailModal").classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      // Đóng modal khi click ra ngoài vùng nội dung
+      document
+        .getElementById("detailModal")
+        .addEventListener("click", closeDetailModal);
+
+      // Modal Lên Lịch Trình
+      function openPlannerModal() {
+        document.getElementById("plannerSuccess").classList.add("hidden");
+        document.getElementById("plannerModal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function openPlannerForDestination(destName) {
+        openPlannerModal();
+        const select = document.getElementById("plannerDestination");
+        for (let i = 0; i < select.options.length; i++) {
+          if (destName.includes(select.options[i].value.split(",")[0])) {
+            select.selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      function closePlannerModal() {
+        document.getElementById("plannerModal").classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      function handlePlannerSubmit(e) {
+        e.preventDefault();
+        const successBox = document.getElementById("plannerSuccess");
+        successBox.classList.remove("hidden");
+        showToast("Đã khởi tạo lịch trình du lịch thành công!");
+        setTimeout(() => {
+          closePlannerModal();
+        }, 2200);
+      }
+
+      // Xử lý đăng ký Newsletter
+      function handleNewsletterSubmit(e) {
+        e.preventDefault();
+        document.getElementById("newsletterEmail").value = "";
+        const msg = document.getElementById("newsletterMsg");
+        msg.classList.remove("hidden");
+        showToast("Đăng ký nhận bản tin Wanderlust World thành công!");
+      }
+
+      // Bật/tắt Menu trên điện thoại
+      function toggleMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("hidden");
+      }
+
+      // Hiển thị Toast thông báo góc dưới
+      let toastTimeout;
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastMessage").textContent = message;
+        toast.classList.remove("translate-y-24", "opacity-0");
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.add("translate-y-24", "opacity-0");
+        }, 3200);
+      }
+    </script>
+  </body>
+</html>
